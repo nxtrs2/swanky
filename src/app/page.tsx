@@ -9,14 +9,13 @@ import About from "@/components/about";
 
 export default function SwankyShears() {
   const footerProps = {
-    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY",
+    googleMapsApiKey: "AIzaSyBN0T4epPdoJNwfe4cFgvl4oz-mkwQbQGI",
     address: "First Floor, H.Asfam, Bodufungandu Magu, Malé, Maldives",
     phone: "(+960) 775-8060",
     email: "info@swankyshears.com",
     openingHours: {
-      "Monday - Friday": "9am - 7pm",
-      Saturday: "10am - 6pm",
-      Sunday: "Closed",
+      "Saturday - Thursday": "10am - 11pm",
+      Friday: "9am - 11am",
     },
   };
 

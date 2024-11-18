@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 const navItems = [
   { href: "#about", label: "About" },
   { href: "#services", label: "Services" },
-  { href: "#contact", label: "Contact" },
+  { href: "#location", label: "Find Us" },
 ];
 
 export default function Navbar() {
