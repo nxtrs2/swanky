@@ -1,5 +1,6 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import Image from "next/image";
+import Map from "./googlemap";
 
 type FooterProps = {
   googleMapsApiKey: string;
@@ -29,7 +30,7 @@ export default function Footer({
   };
 
   return (
-    <footer id="location" className="bg-gray-900 text-white py-8">
+    <footer id="location" className="bg-gray-900 text-white py-8 mt-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
@@ -66,7 +67,7 @@ export default function Footer({
           </div>
           <div>
             <h3 className="text-xl font-thin mb-4">Our Location</h3>
-            <LoadScript googleMapsApiKey={googleMapsApiKey}>
+            {/* <LoadScript googleMapsApiKey={googleMapsApiKey}>
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={center}
@@ -74,7 +75,8 @@ export default function Footer({
               >
                 <Marker position={center} />
               </GoogleMap>
-            </LoadScript>
+            </LoadScript> */}
+            <Map />
           </div>
         </div>
         <div className="mt-20 text-center text-xs ">

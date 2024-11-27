@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
   { href: "#about", label: "About" },
-  { href: "#services", label: "Services" },
+  { href: "/services", label: "Services" },
   { href: "#location", label: "Find Us" },
 ];
 

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -32,7 +33,7 @@ export default function Hero({
       </div>
       <div className="relative container mx-auto px-4 py-32 sm:py-48 lg:py-56">
         <div className="max-w-3xl">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-semibold lg:font-normal tracking-tight sm:text-5xl lg:text-6xl">
             {title}
           </h1>
           <p className="mt-6 text-xl sm:text-2xl max-w-xl">{subtitle}</p>
