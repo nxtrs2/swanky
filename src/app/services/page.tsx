@@ -33,6 +33,7 @@ const footerProps = {
 interface Service {
   id: string;
   title: string;
+  name: string;
   description: string;
   price: number;
   active: boolean;
@@ -75,6 +76,7 @@ export default function ServicesPage() {
               services (
                 id,
                 title,
+                name,
                 description,
                 price,
                 active,
@@ -126,31 +128,36 @@ export default function ServicesPage() {
                   >
                     {category.title}
                   </CardTitle>
-                  <CardDescription className="text-gray-400 py-3 text-md">
+                  {/* <CardDescription className="text-gray-400 py-3 text-md">
                     {category.description}
-                  </CardDescription>
+                  </CardDescription> */}
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {category.services.map((service, serviceIndex) => (
-                      <li
-                        key={serviceIndex}
-                        className="flex justify-between items-center border-b border-gray-800 py-2"
-                      >
-                        <div className="ml-4">
-                          <span className="font-normal text-sm lg:font-medium lg:text-lg text-blue-100">
-                            {service.title}
+                    {[...category.services]
+                      .sort((a, b) => b.display_order - a.display_order) // Sort by display_order descending
+                      .map((service, serviceIndex) => (
+                        <li
+                          key={serviceIndex}
+                          className="flex justify-between items-center border-b border-gray-800 py-2"
+                        >
+                          <div className="ml-4">
+                            <span className="font-normal text-sm lg:font-medium lg:text-lg text-blue-100">
+                              {service.name}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              {/* <Clock className="mr-1 text-xs" />{" "} */} (
+                              {service.duration} m)
+                            </span>
+                            <p className="text-xs text-gray-400">
+                              {service.description}
+                            </p>
+                          </div>
+                          <span className="font-extralight text-xs lg:font-medium lg:text-lg  text-yellow-500 ">
+                            MVR {service.price}
                           </span>
-                          <span className="text-xs text-gray-400">
-                            {/* <Clock className="mr-1 text-xs" />{" "} */} (
-                            {service.duration}m)
-                          </span>
-                        </div>
-                        <span className="font-extralight text-xs lg:font-medium lg:text-lg  text-yellow-500 ">
-                          MVR {service.price}
-                        </span>
-                      </li>
-                    ))}
+                        </li>
+                      ))}
                   </ul>
                 </CardContent>
               </Card>
