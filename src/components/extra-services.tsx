@@ -13,12 +13,14 @@ interface Service {
 }
 
 interface Props {
+  date: Date;
   staffId: number;
   mainServiceId: number;
   onSelect: (services: number[]) => void;
 }
 
 export default function ExtraServices({
+  date,
   staffId,
   mainServiceId,
   onSelect,

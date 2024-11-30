@@ -18,10 +18,12 @@ interface Service {
 }
 
 interface StaffServiceSelectorProps {
+  date: Date;
   onSelect: (staffId: number | null, serviceId: number | null) => void;
 }
 
 export default function StaffServiceSelector({
+  date,
   onSelect,
 }: StaffServiceSelectorProps) {
   const supabase = createClient();

@@ -29,6 +29,7 @@ export default function TimeSelection({
   useEffect(() => {
     const fetchAvailableSlots = async () => {
       setLoading(true);
+      console.log("Date:", format(date, "yyyy-MM-dd"));
 
       // Fetch bookings for the selected date and staff
       const { data: bookings, error: bookingsError } = await supabase
@@ -66,6 +67,17 @@ export default function TimeSelection({
       while (isBefore(currentTime, endTime)) {
         allSlots.push(format(currentTime, "HH:mm"));
         currentTime = addMinutes(currentTime, 15);
+      }
+
+      if (!bookings || bookings.length === 0) {
+        setSlots(
+          allSlots.map((slot) => ({
+            time: slot,
+            available: true,
+          }))
+        );
+        setLoading(false);
+        return;
       }
 
       // Determine availability of each slot

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
@@ -9,9 +9,10 @@ import StaffServiceSelector from "@/components/staff-service-selector";
 import ExtraServices from "@/components/extra-services";
 import TimeSelection from "@/components/time-selection";
 import ConfirmBooking from "@/components/confirm-booking";
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 import { ChevronLeft } from "lucide-react";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+// import { format } from "path";
 
 const steps = [
   "Select Date",
@@ -32,7 +33,7 @@ export default function Booking() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date);
+    setSelectedDate(date ? date : new Date());
     setStep(1);
   };
 
@@ -83,9 +84,9 @@ export default function Booking() {
             <Calendar
               mode="single"
               selected={selectedDate}
-              onSelect={handleDateSelect}
+              onSelect={(date) => handleDateSelect(date)}
               disabled={(date) =>
-                date < new Date() || date > addDays(new Date(), 5)
+                date < addDays(new Date(), -1) || date > addDays(new Date(), 5)
               }
             />
           </div>
@@ -93,14 +94,16 @@ export default function Booking() {
       case 1:
         return (
           <StaffServiceSelector
+            date={selectedDate!}
             onSelect={handleStaffServiceSelect}
-            selectedStaff={selectedStaff}
-            selectedService={selectedService}
+            // selectedStaff={selectedStaff}
+            // selectedService={selectedService}
           />
         );
       case 2:
         return (
           <ExtraServices
+            date={selectedDate!}
             staffId={selectedStaff!}
             mainServiceId={selectedService!}
             onSelect={handleExtraServicesSelect}
@@ -138,14 +141,14 @@ export default function Booking() {
         <Button>Book Now</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[825px]">
-        <DialogTitle>Book an Appointment</DialogTitle>
-        <DialogDescription>
-          Follow the steps below to book an appointment.
+        <DialogTitle className="text-2xl">Book an Appointment</DialogTitle>
+        <DialogDescription className="text-1xl">
+          {/* {format(selectedDate!, "dd MMMM yyyy")} */}
         </DialogDescription>
         <div className="p-4 space-y-4">
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Book an Appointment</h1>
+            <div className="flex items-center justify-end">
+              {/* <h1 className="text-2xl font-bold">Book an Appointment</h1> */}
               {step > 0 && (
                 <Button variant="ghost" size="sm" onClick={handleBack}>
                   <ChevronLeft className="mr-2 h-4 w-4" />
