@@ -15,8 +15,8 @@ import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 // import { format } from "path";
 
 const steps = [
-  "Select Date",
   "Choose Staff & Service",
+  "Select Date",
   "Add Extra Services",
   "Select Time",
   "Confirm Booking",
@@ -27,27 +27,30 @@ export default function Booking() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
-  const [selectedStaff, setSelectedStaff] = useState<number | null>(null);
-  const [selectedService, setSelectedService] = useState<number | null>(null);
-  const [extraServices, setExtraServices] = useState<number[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedStaff, setSelectedStaff] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [extraServices, setExtraServices] = useState<string[]>([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  const handleDateSelect = (date: Date | undefined) => {
-    setSelectedDate(date ? date : new Date());
+  const handleStaffServiceSelect = (
+    categoryId: string | null,
+    staffId: string | null,
+    serviceId: string | null
+  ) => {
+    setSelectedCategory(categoryId);
+    setSelectedStaff(staffId);
+    setSelectedService(serviceId);
     setStep(1);
   };
 
-  const handleStaffServiceSelect = (
-    staffId: number | null,
-    serviceId: number | null
-  ) => {
-    setSelectedStaff(staffId);
-    setSelectedService(serviceId);
+  const handleExtraServicesSelect = (services: string[]) => {
+    setExtraServices(services);
     setStep(2);
   };
 
-  const handleExtraServicesSelect = (services: number[]) => {
-    setExtraServices(services);
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date ? date : new Date());
     setStep(3);
   };
 
@@ -79,6 +82,25 @@ export default function Booking() {
     switch (step) {
       case 0:
         return (
+          <StaffServiceSelector
+            date={selectedDate!}
+            onSelect={handleStaffServiceSelect}
+            selectedCategoryId={selectedCategory}
+            selectedStaffId={selectedStaff}
+            selectedServiceId={selectedService}
+          />
+        );
+      case 1:
+        return (
+          <ExtraServices
+            date={selectedDate!}
+            staffId={selectedStaff!}
+            mainServiceId={selectedService!}
+            onSelect={handleExtraServicesSelect}
+          />
+        );
+      case 2:
+        return (
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">Select a Date</h2>
             <Calendar
@@ -91,24 +113,7 @@ export default function Booking() {
             />
           </div>
         );
-      case 1:
-        return (
-          <StaffServiceSelector
-            date={selectedDate!}
-            onSelect={handleStaffServiceSelect}
-            // selectedStaff={selectedStaff}
-            // selectedService={selectedService}
-          />
-        );
-      case 2:
-        return (
-          <ExtraServices
-            date={selectedDate!}
-            staffId={selectedStaff!}
-            mainServiceId={selectedService!}
-            onSelect={handleExtraServicesSelect}
-          />
-        );
+
       case 3:
         return (
           <TimeSelection
@@ -140,7 +145,7 @@ export default function Booking() {
       <DialogTrigger asChild>
         <Button>Book Now</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[825px]">
+      <DialogContent className="sm:max-w-[825px] bg-gradient-to-br from-black via-gray-900 to-black border-gray-800 rounded-lg shadow-lg">
         <DialogTitle className="text-2xl">Book an Appointment</DialogTitle>
         <DialogDescription className="text-1xl">
           {/* {format(selectedDate!, "dd MMMM yyyy")} */}
@@ -150,7 +155,12 @@ export default function Booking() {
             <div className="flex items-center justify-end">
               {/* <h1 className="text-2xl font-bold">Book an Appointment</h1> */}
               {step > 0 && (
-                <Button variant="ghost" size="sm" onClick={handleBack}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleBack}
+                  className="mt-4 bg-gray-900 text-white border border-gray-800 hover:bg-gray-800 rounded-md focus:ring-2 focus:ring-gray-700"
+                >
                   <ChevronLeft className="mr-2 h-4 w-4" />
                   Back
                 </Button>
@@ -158,8 +168,14 @@ export default function Booking() {
             </div>
             <Progress
               value={(step / (steps.length - 1)) * 100}
-              className="w-full"
-            />
+              className="w-full bg-gray-600 rounded-lg overflow-hidden border border-gray-700"
+            >
+              <div
+                className="h-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700"
+                style={{ width: `${(step / (steps.length - 1)) * 100}%` }}
+              />
+            </Progress>
+
             <div className="flex justify-between text-sm text-gray-500">
               {steps.map((stepName, index) => (
                 <span

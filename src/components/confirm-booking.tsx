@@ -1,18 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ConfirmBookingProps } from "@/types";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { format } from "date-fns";
-
-interface Props {
-  date: Date;
-  time: string;
-  staffId: number;
-  serviceId: number;
-  extraServices: number[];
-  onConfirm: () => void;
-}
 
 export default function ConfirmBooking({
   date,
@@ -21,7 +13,7 @@ export default function ConfirmBooking({
   serviceId,
   extraServices,
   onConfirm,
-}: Props) {
+}: ConfirmBookingProps) {
   const supabase = createClient();
   const [staffName, setStaffName] = useState("");
   const [services, setServices] = useState<

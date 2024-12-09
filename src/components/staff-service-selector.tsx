@@ -1,113 +1,235 @@
+"use client";
+
 import { useState, useEffect } from "react";
+import { Category, Service, Staff, StaffServiceSelectorProps } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
-
-interface Staff {
-  id: number;
-  name: string;
-  profile_photo_url: string;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  title: string;
-  duration: number;
-  price: number;
-}
-
-interface StaffServiceSelectorProps {
-  date: Date;
-  onSelect: (staffId: number | null, serviceId: number | null) => void;
-}
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function StaffServiceSelector({
   date,
+  selectedCategoryId,
+  selectedStaffId,
+  selectedServiceId,
   onSelect,
 }: StaffServiceSelectorProps) {
   const supabase = createClient();
-  const [staff, setStaff] = useState<Staff[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [services, setServices] = useState<Service[]>([]);
-  const [selectedStaff, setSelectedStaff] = useState<number | null>(null);
-  const [selectedService, setSelectedService] = useState<number | null>(null);
+  const [staff, setStaff] = useState<Staff[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedStaff, setSelectedStaff] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: staffData } = await supabase.from("staff").select("*");
-      const { data: servicesData } = await supabase
-        .from("services")
+    // Set initial state based on props
+    setSelectedCategory(selectedCategoryId || null);
+    setSelectedService(selectedServiceId || null);
+    setSelectedStaff(selectedStaffId || null);
+  }, [selectedCategoryId, selectedServiceId, selectedStaffId]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("category")
         .select("*")
         .eq("active", true)
-        .limit(5);
+        .order("display_order", { ascending: false });
 
-      if (staffData) setStaff(staffData);
-      if (servicesData) setServices(servicesData);
+      if (error) {
+        console.error("Error fetching categories:", error);
+      } else {
+        setCategories(data);
+      }
+      setLoading(false);
     };
 
-    fetchData();
+    fetchCategories();
   }, []);
 
-  const handleStaffSelect = (staffId: number) => {
-    setSelectedStaff(staffId);
+  useEffect(() => {
+    const fetchServices = async () => {
+      if (selectedCategory) {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("services")
+          .select("*")
+          .eq("category_id", selectedCategory)
+          .eq("active", true)
+          .order("display_order", { ascending: false });
+
+        if (error) {
+          console.error("Error fetching services:", error);
+        } else {
+          setServices(data);
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    const fetchStaff = async () => {
+      if (selectedService) {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("staff_services")
+          .select("staff_id")
+          .eq("service_id", selectedService);
+
+        if (error) {
+          console.error("Error fetching staff_services:", error);
+        } else {
+          const staffIds = data.map((item) => item.staff_id);
+          const { data: staffData, error: staffError } = await supabase
+            .from("staff")
+            .select("*")
+            .in("id", staffIds)
+            .eq("active", true);
+
+          if (staffError) {
+            console.error("Error fetching staff:", staffError);
+          } else {
+            setStaff(staffData);
+          }
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchStaff();
+  }, [selectedService]);
+
+  const handleCategorySelect = (categoryId: string) => {
+    setSelectedCategory(categoryId);
     setSelectedService(null);
+    setSelectedStaff(null);
   };
 
-  const handleServiceSelect = (serviceId: number) => {
+  const handleServiceSelect = (serviceId: string) => {
     setSelectedService(serviceId);
+    setSelectedStaff(null);
+  };
+
+  const handleStaffSelect = (staffId: string) => {
+    setSelectedStaff(staffId);
   };
 
   const handleNext = () => {
-    onSelect(selectedStaff, selectedService);
+    onSelect(selectedCategory, selectedStaff, selectedService);
   };
 
+  if (loading && categories.length === 0) {
+    return (
+      <div className="p-4 space-y-4">
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-20 w-full" />
+      </div>
+    );
+  }
+
   return (
-    <div className="p-4">
-      <h2 className="text-lg font-semibold mb-4">Choose Staff or Service</h2>
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1">
+    <div className="p-4 space-y-4">
+      <h2 className="text-lg font-semibold mb-4 text-white">
+        Choose Category, Service, and Staff
+      </h2>
+
+      <div>
+        <label
+          htmlFor="category-select"
+          className="block text-sm font-medium text-white mb-1"
+        >
+          Category
+        </label>
+        <Select
+          onValueChange={handleCategorySelect}
+          value={selectedCategory || undefined}
+        >
+          <SelectTrigger
+            id="category-select"
+            className="bg-gray-900 text-white border border-gray-800 rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-700"
+          >
+            <SelectValue placeholder="Select a category" />
+          </SelectTrigger>
+          <SelectContent className="bg-gradient-to-br from-black via-gray-900 to-black border border-gray-800 text-white rounded-md shadow-lg">
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.id.toString()}>
+                {category.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {selectedCategory && (
+        <div>
+          <label
+            htmlFor="service-select"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Service
+          </label>
+          <Select
+            onValueChange={handleServiceSelect}
+            value={selectedService || undefined}
+          >
+            <SelectTrigger
+              id="service-select"
+              className="bg-gray-900 text-white border border-gray-800 rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-700"
+            >
+              <SelectValue placeholder="Select a service" />
+            </SelectTrigger>
+            <SelectContent className="bg-gradient-to-br from-black via-gray-900 to-black border border-gray-800 text-white rounded-md shadow-lg">
+              {services.map((service) => (
+                <SelectItem key={service.id} value={service.id}>
+                  {service.name} - {service.duration}min - MVR {service.price}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
+      {selectedService && (
+        <div>
           <h3 className="text-md font-semibold mb-2">Staff</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-4">
             {staff.map((s) => (
               <div key={s.id} className="flex flex-col items-center">
                 <Avatar
-                  className={`cursor-pointer ${
-                    selectedStaff === s.id ? "ring-2 ring-primary" : ""
+                  className={`cursor-pointer w-16 h-16 ${
+                    selectedStaff === s.id ? "ring-4 ring-yellow-600" : ""
                   }`}
                   onClick={() => handleStaffSelect(s.id)}
                 >
-                  <AvatarImage src={s.profile_photo_url} alt={s.name} />
+                  <AvatarImage
+                    src={s.profile_photo_url || undefined}
+                    alt={s.name}
+                  />
                   <AvatarFallback>{s.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <span className="mt-1 text-sm">{s.name}</span>
+                <span className="mt-1 text-sm text-center">{s.name}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="flex-1">
-          <h3 className="text-md font-semibold mb-2">Services</h3>
-          <ul className="space-y-2">
-            {services.map((service) => (
-              <li
-                key={service.id}
-                className={`cursor-pointer p-2 rounded ${
-                  selectedService === service.id
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-secondary"
-                }`}
-                onClick={() => handleServiceSelect(service.id)}
-              >
-                <span>{service.name}</span>
-                <span className="float-right">
-                  {service.duration}min - MVR {service.price}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      )}
+
       <Button
-        className="mt-4"
+        className="w-full mt-4 bg-gray-900 text-white border border-gray-800 hover:bg-gray-800 rounded-md focus:ring-2 focus:ring-gray-700"
         onClick={handleNext}
         disabled={!selectedStaff || !selectedService}
       >

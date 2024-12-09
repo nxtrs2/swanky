@@ -1,17 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { TimeSelectionProps } from "@/types";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { format, addMinutes, parse, isBefore, isAfter } from "date-fns";
-
-interface Props {
-  date: Date;
-  staffId: number;
-  serviceId: number;
-  extraServices: number[];
-  onSelect: (time: string) => void;
-}
 
 export default function TimeSelection({
   date,
@@ -19,7 +12,7 @@ export default function TimeSelection({
   serviceId,
   extraServices,
   onSelect,
-}: Props) {
+}: TimeSelectionProps) {
   const supabase = createClient();
   const [slots, setSlots] = useState<{ time: string; available: boolean }[]>(
     []

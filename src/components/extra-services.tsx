@@ -1,33 +1,34 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Service, ExtraServicesProps } from "@/types";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 
-interface Service {
-  id: number;
-  name: string;
-  duration: number;
-  price: number;
-}
+// interface Service {
+//   id: number;
+//   title: string;
+//   duration: number;
+//   price: number;
+// }
 
-interface Props {
-  date: Date;
-  staffId: number;
-  mainServiceId: number;
-  onSelect: (services: number[]) => void;
-}
+// interface ExtraServicesProps {
+//   date: Date;
+//   staffId: number;
+//   mainServiceId: number;
+//   onSelect: (services: number[]) => void;
+// }
 
 export default function ExtraServices({
   date,
   staffId,
   mainServiceId,
   onSelect,
-}: Props) {
+}: ExtraServicesProps) {
   const supabase = createClient();
   const [extraServices, setExtraServices] = useState<Service[]>([]);
-  const [selectedServices, setSelectedServices] = useState<number[]>([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export default function ExtraServices({
     fetchExtraServices();
   }, [staffId, mainServiceId]);
 
-  const handleServiceToggle = (serviceId: number) => {
+  const handleServiceToggle = (serviceId: string) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
         ? prev.filter((id) => id !== serviceId)
@@ -105,7 +106,7 @@ export default function ExtraServices({
               htmlFor={`service-${service.id}`}
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              {service.name} - {service.duration} min - MVR {service.price}
+              {service.title} - {service.duration} min - MVR {service.price}
             </label>
           </div>
         ))}
