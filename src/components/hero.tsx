@@ -24,10 +24,10 @@ export default function Hero({
         <Image
           src={imageUrl}
           alt="Hero background"
-          width={3600}
-          height={2333}
+          fill
           quality={100}
           priority
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
       </div>
