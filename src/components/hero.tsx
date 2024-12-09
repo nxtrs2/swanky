@@ -24,8 +24,8 @@ export default function Hero({
         <Image
           src={imageUrl}
           alt="Hero background"
-          layout="fill"
-          objectFit="cover"
+          width={3600}
+          height={2333}
           quality={100}
           priority
         />

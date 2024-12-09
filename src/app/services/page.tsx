@@ -105,7 +105,7 @@ export default function ServicesPage() {
 
       <main>
         <Hero {...heroProps} />
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto relative">
           <h1 className="flex items-center justify-center py-10 text-center">
             <span className="flex-grow border-t border-yellow-600 ms-4"></span>
             <span
@@ -113,9 +113,17 @@ export default function ServicesPage() {
             >
               Our Services
             </span>
+
             <span className="flex-grow border-t border-yellow-600 me-4"></span>
           </h1>
 
+          <Image
+            className="absolute -top-20 -right-4 scale-75 lg:-top-16 lg:right-72  lg:scale-100"
+            src="/discounts/30percent.png"
+            alt="30% Discount until 31 Dec 2024"
+            width={161}
+            height={165}
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4 mx-auto py-3">
             {categories.map((category, index) => (
               <Card
@@ -124,7 +132,7 @@ export default function ServicesPage() {
               >
                 <CardHeader>
                   <CardTitle
-                    className={`${greatVibes.className} text-yellow-600  text-4xl text-center`}
+                    className={`${greatVibes.className} text-yellow-600 text-4xl text-center `}
                   >
                     {category.title}
                   </CardTitle>
