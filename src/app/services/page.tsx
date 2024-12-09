@@ -55,8 +55,8 @@ interface CategoryWithServices {
 const heroProps = {
   title: "Men's Grooming Services",
   subtitle: " Style, Comfort, and Expertise exclusively for men",
-  ctaText: "View Our Services",
-  ctaLink: "#services",
+  ctaText: "Find our Location",
+  ctaLink: "#location",
   imageUrl: "/hero/services.jpg",
 };
 
