@@ -92,26 +92,41 @@ export default function ExtraServices({
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Add Extra Services</h2>
-      <div className="space-y-2">
+    <div className="space-y-4 bg-gradient-to-br from-black via-gray-900 to-black p-4 rounded-lg shadow-lg border border-gray-800">
+      <h2 className="text-lg font-semibold text-white">Add Extra Services</h2>
+      {/* Scrollable List Container */}
+      <div className="space-y-2 max-h-64 md:max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
         {extraServices.map((service) => (
-          <div key={service.id} className="flex items-center space-x-2">
+          <div
+            key={service.id}
+            className="flex items-center space-x-4 p-2 bg-gray-800 rounded-md hover:bg-gray-700"
+          >
+            {/* Checkbox */}
             <Checkbox
               id={`service-${service.id}`}
               checked={selectedServices.includes(service.id)}
               onCheckedChange={() => handleServiceToggle(service.id)}
+              className="h-5 w-5 text-blue-500 focus:ring-2 focus:ring-blue-500 border-gray-600 rounded"
             />
-            <label
-              htmlFor={`service-${service.id}`}
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              {service.title} - {service.duration} min - MVR {service.price}
-            </label>
+            {/* Content */}
+            <div className="flex-1">
+              <span className="text-sm font-medium text-white">
+                {service.title}
+              </span>
+              <div className="flex justify-between text-gray-400 text-xs mt-1">
+                <span>{service.duration} min</span>
+                <span className="text-right">MVR {service.price}</span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
-      <Button onClick={handleConfirm}>Next</Button>
+      <Button
+        onClick={handleConfirm}
+        className="w-full mt-4 bg-gray-900 text-white border border-gray-800 hover:bg-gray-800 rounded-md focus:ring-2 focus:ring-gray-700"
+      >
+        Next
+      </Button>
     </div>
   );
 }

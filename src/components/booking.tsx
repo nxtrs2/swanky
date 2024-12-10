@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Great_Vibes } from "next/font/google";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
@@ -12,7 +13,8 @@ import ConfirmBooking from "@/components/confirm-booking";
 import { addDays, format } from "date-fns";
 import { ChevronLeft } from "lucide-react";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-// import { format } from "path";
+
+const greatVibes = Great_Vibes({ subsets: ["latin"], weight: ["400"] });
 
 const steps = [
   "Choose Staff & Service",
@@ -24,9 +26,7 @@ const steps = [
 
 export default function Booking() {
   const [step, setStep] = useState(0);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedStaff, setSelectedStaff] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<string | null>(null);
@@ -51,6 +51,9 @@ export default function Booking() {
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date ? date : new Date());
+  };
+
+  const handleNextStepAfterDateSelect = () => {
     setStep(3);
   };
 
@@ -101,16 +104,26 @@ export default function Booking() {
         );
       case 2:
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-semibold">Select a Date</h2>
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={(date) => handleDateSelect(date)}
-              disabled={(date) =>
-                date < addDays(new Date(), -1) || date > addDays(new Date(), 5)
-              }
-            />
+          <div className="space-y-4 bg-gradient-to-br from-black via-gray-900 to-black p-4 rounded-lg shadow-lg border border-gray-800">
+            <h2 className="text-lg font-semibold text-white">Select a Date</h2>
+            <div className="flex justify-center">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => handleDateSelect(date)}
+                disabled={(date) =>
+                  date < addDays(new Date(), -1) ||
+                  date > addDays(new Date(), 5)
+                }
+              />
+            </div>
+            <Button
+              disabled={!selectedDate}
+              onClick={handleNextStepAfterDateSelect}
+              className="w-full mt-4 bg-gray-900 text-white border border-gray-800 hover:bg-gray-800 rounded-md focus:ring-2 focus:ring-gray-700"
+            >
+              Next
+            </Button>
           </div>
         );
 
@@ -146,10 +159,14 @@ export default function Booking() {
         <Button>Book Now</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[825px] bg-gradient-to-br from-black via-gray-900 to-black border-gray-800 rounded-lg shadow-lg">
-        <DialogTitle className="text-2xl">Book an Appointment</DialogTitle>
-        <DialogDescription className="text-1xl">
-          {/* {format(selectedDate!, "dd MMMM yyyy")} */}
-        </DialogDescription>
+        <DialogTitle
+          className={`${greatVibes.className}  text-yellow-600 text-4xl text-center`}
+        >
+          Book an Appointment
+        </DialogTitle>
+        {/* <DialogDescription className=" text-white">
+          Select dddd
+        </DialogDescription> */}
         <div className="p-4 space-y-4">
           <div className="space-y-2">
             <div className="flex items-center justify-end">
@@ -159,7 +176,7 @@ export default function Booking() {
                   variant="ghost"
                   size="sm"
                   onClick={handleBack}
-                  className="mt-4 bg-gray-900 text-white border border-gray-800 hover:bg-gray-800 rounded-md focus:ring-2 focus:ring-gray-700"
+                  className="mt-4 bg-gray-900 text-white border border-gray-800 hover:bg-gray-800 rounded-md hover:text-blue-400 "
                 >
                   <ChevronLeft className="mr-2 h-4 w-4" />
                   Back
@@ -168,7 +185,7 @@ export default function Booking() {
             </div>
             <Progress
               value={(step / (steps.length - 1)) * 100}
-              className="w-full bg-gray-600 rounded-lg overflow-hidden border border-gray-700"
+              className="w-full bg-blue-900 rounded-lg overflow-hidden border border-gray-600"
             >
               <div
                 className="h-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700"
@@ -176,12 +193,12 @@ export default function Booking() {
               />
             </Progress>
 
-            <div className="flex justify-between text-sm text-gray-500">
+            <div className="flex justify-between text-sm text-gray-200 ">
               {steps.map((stepName, index) => (
                 <span
                   key={stepName}
                   className={`${
-                    index <= step ? "font-medium text-primary" : ""
+                    index <= step ? "font-medium text-primar text-blue-400" : ""
                   }`}
                 >
                   {index + 1}

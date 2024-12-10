@@ -142,18 +142,18 @@ export default function StaffServiceSelector({
   }
 
   return (
-    <div className="p-4 space-y-4">
-      <h2 className="text-lg font-semibold mb-4 text-white">
-        Choose Category, Service, and Staff
+    <div className="space-y-4 bg-gradient-to-br from-black via-gray-900 to-black p-4 rounded-lg shadow-lg border border-gray-800">
+      <h2 className="text-sm font-thin mb-4 text-white">
+        Choose a Category, Service, and a Staff
       </h2>
 
       <div>
-        <label
+        {/* <label
           htmlFor="category-select"
           className="block text-sm font-medium text-white mb-1"
         >
           Category
-        </label>
+        </label> */}
         <Select
           onValueChange={handleCategorySelect}
           value={selectedCategory || undefined}
@@ -176,12 +176,12 @@ export default function StaffServiceSelector({
 
       {selectedCategory && (
         <div>
-          <label
+          {/* <label
             htmlFor="service-select"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
             Service
-          </label>
+          </label> */}
           <Select
             onValueChange={handleServiceSelect}
             value={selectedService || undefined}
@@ -205,12 +205,13 @@ export default function StaffServiceSelector({
 
       {selectedService && (
         <div>
-          <h3 className="text-md font-semibold mb-2">Staff</h3>
+          <h3 className="text-sm font-light text-white mb-2">Choose Staff</h3>
           <div className="flex flex-wrap gap-4">
             {staff.map((s) => (
-              <div key={s.id} className="flex flex-col items-center">
+              <div key={s.id} className="flex flex-col items-center space-y-2">
+                {/* Avatar */}
                 <Avatar
-                  className={`cursor-pointer w-16 h-16 ${
+                  className={`cursor-pointer w-16 h-16 rounded-full ${
                     selectedStaff === s.id ? "ring-4 ring-yellow-600" : ""
                   }`}
                   onClick={() => handleStaffSelect(s.id)}
@@ -218,10 +219,14 @@ export default function StaffServiceSelector({
                   <AvatarImage
                     src={s.profile_photo_url || undefined}
                     alt={s.name}
+                    className="rounded-full"
                   />
-                  <AvatarFallback>{s.name.charAt(0)}</AvatarFallback>
+                  <AvatarFallback className="rounded-full">
+                    {s.name.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
-                <span className="mt-1 text-sm text-center">{s.name}</span>
+                {/* Staff Name */}
+                <span className="text-sm font-medium text-white">{s.name}</span>
               </div>
             ))}
           </div>

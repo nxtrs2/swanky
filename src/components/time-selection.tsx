@@ -18,6 +18,7 @@ export default function TimeSelection({
     []
   );
   const [loading, setLoading] = useState(true);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAvailableSlots = async () => {
@@ -109,20 +110,49 @@ export default function TimeSelection({
   if (loading) return <div>Loading available time slots...</div>;
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Select a Time</h2>
-      <div className="grid grid-cols-4 gap-2">
+    <div className="space-y-4 bg-gradient-to-br from-black via-gray-900 to-black p-4 rounded-lg shadow-lg border border-gray-800">
+      <h2 className="text-lg font-semibold text-white">Select a Time</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
         {slots.map(({ time, available }) => (
           <Button
             key={time}
             variant="outline"
-            onClick={() => available && onSelect(time)}
+            onClick={() => available && setSelectedTime(time)}
             disabled={!available}
+            className={`p-1 text-sm font-medium rounded-md  hover:text-yellow-500 ${
+              available
+                ? "text-white border-gray-700 bg-gray-800 hover:bg-gray-700"
+                : "text-gray-500 border-gray-700 bg-gray-800 opacity-50 cursor-not-allowed"
+            }`}
           >
             {time}
           </Button>
         ))}
+        d
       </div>
+      <Button
+        disabled={!selectedTime}
+        onClick={() => onSelect(selectedTime || "")}
+        className="w-full mt-4 bg-gray-800 text-white border border-gray-800 hover:bg-gray-800 rounded-md focus:ring-2 focus:ring-gray-700"
+      >
+        Select Time
+      </Button>
     </div>
+
+    // <div className="space-y-4">
+    //   <h2 className="text-lg font-semibold">Select a Time</h2>
+    //   <div className="grid grid-cols-4 gap-2">
+    //     {slots.map(({ time, available }) => (
+    //       <Button
+    //         key={time}
+    //         variant="outline"
+    //         onClick={() => available && onSelect(time)}
+    //         disabled={!available}
+    //       >
+    //         {time}
+    //       </Button>
+    //     ))}
+    //   </div>
+    // </div>
   );
 }
