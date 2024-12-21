@@ -3,6 +3,8 @@ import { logout } from "../login/actions";
 
 import { createClient } from "@/utils/supabase/server";
 
+export const runtime = "edge";
+
 export default async function PrivatePage() {
   const supabase = await createClient();
 

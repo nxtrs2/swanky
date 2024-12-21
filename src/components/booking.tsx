@@ -238,7 +238,7 @@ export default function Booking() {
             Book an Appointment
           </DialogTitle>
           <DialogDescription className=" text-gray-400 animate-fade-in">
-            <span>Let's get started by entering your phone number.</span>
+            <span>Let&apos;s get started by entering your phone number.</span>
           </DialogDescription>
           <div className="p-4 space-y-4">
             <div className="space-y-2">
