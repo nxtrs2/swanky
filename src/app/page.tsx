@@ -13,8 +13,8 @@ export default function SwankyShears() {
     phone: "(+960) 775-8060",
     email: "info@swankyshears.com",
     openingHours: {
-      "Saturday - Thursday": "10am - 11pm",
-      Friday: "9am - 11am",
+      "Saturday - Thursday": "10am - 10pm",
+      Friday: "Closed",
     },
   };
 
